@@ -1,6 +1,6 @@
 {
     "name": "haldayne/upload-iterator",
-    "description": "Uniformly iterate over set of uploaded files.",
+    "description": "Safe, simple iterator for the $_FILES super-global.",
     "license": "MIT",
     "authors": [
         {
