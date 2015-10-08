@@ -1,5 +1,5 @@
 <?php
-namespace Haldayne\UploadIterator;
+namespace Haldayne\Customs;
 
 use Faker;
 use org\bovigo\vfs;

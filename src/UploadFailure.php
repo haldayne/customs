@@ -1,5 +1,5 @@
 <?php
-namespace Haldayne\UploadIterator;
+namespace Haldayne\Customs;
 
 /**
  * Represents a file that did not successfully upload.

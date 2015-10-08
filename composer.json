@@ -1,6 +1,6 @@
 {
-    "name": "haldayne/upload-iterator",
-    "description": "Safe, simple iterator for the $_FILES super-global.",
+    "name": "haldayne/customs",
+    "description": "Iterator for the $_FILES super-global, and a robust API for validating file uploads.",
     "license": "MIT",
     "authors": [
         {
@@ -14,7 +14,7 @@
     "autoload": {
         "classmap": [ "src" ],
         "psr-4": {
-            "Haldayne\\UploadIterator\\": "src/"
+            "Haldayne\\Customs\\": "src/"
         }
     },
     "extra": {
@@ -33,7 +33,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Haldayne\\UploadIterator\\": "tests/"
+            "Haldayne\\Customs\\": "tests/"
         }
     }
 }

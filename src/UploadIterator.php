@@ -1,5 +1,5 @@
 <?php
-namespace Haldayne\UploadIterator;
+namespace Haldayne\Customs;
 
 /**
  * Iterate over the $_FILES super-global, or an array in that same format.
@@ -197,83 +197,29 @@ class UploadIterator implements \ArrayAccess, \SeekableIterator, \Countable
      */
     private function wrap($name, array $info)
     {
+        // ensure the local server file was actually uploaded
+        if (! is_uploaded_file($info['tmp_name'])) {
+            throw new \RuntimeException();
+        }
+
+        // return the correct object based on the type
         switch ($info['error']) {
         case UPLOAD_ERR_OK:
-            return $info; // return UploadFileFactory::fromInfo($name, $info);
+            return new UploadFile($name, $info['name'], $info['tmp_name']);
             
         case UPLOAD_ERR_INI_SIZE:
         case UPLOAD_ERR_FORM_SIZE:
         case UPLOAD_ERR_PARTIAL:
         case UPLOAD_ERR_NO_FILE:
-            return $info; // return UploadErrorFactory::fromInfo($name, $info);
+            return new UploadError($name, $info['error'], $info['size']);
 
         case UPLOAD_ERR_NO_TMP_DIR:
         case UPLOAD_ERR_CANT_WRITE:
         case UPLOAD_ERR_EXTENSION:
-            return $info; // throw UploadExceptionFactory::fromInfo($name, $info);
+            throw new \RuntimeException();
+
+        default:
+            throw new \RuntimeException();
         }
     }
-
-    /*
-    private function check_name_sanity($name)
-    {
-        if (! (is_string($name) && 0 < strlen($name))) {
-            throw new \RuntimeException('HTML variable name must be non-empty string');
-        }
-    }
-
-    private function check_info_sanity($info)
-    {
-        if (! is_array($info) && 5 === count($info)) {
-            throw new \RuntimeException('Not an array with exactly five elements');
-        }
-
-        $keys = array_diff(array_keys($info), ['name', 'type', 'size', 'tmp_name', 'error']);
-        if ([] !== $keys) {
-            throw new \RuntimeException('Missing expected keys: ' . implode(',', $keys));
-        }
-
-        $name = $info['name'];
-        $type = $info['type'];
-        $size = $info['size'];
-        $tmpn = $info['tmp_name'];
-        $errn = $info['error'];
-
-        if (
-
-        if (! (is_string($name) && 0 < strlen($name))) {
-            throw new \RuntimeException('Client file name must be non-empty string');
-        }
-
-        if (! is_string($type)) {
-            throw new \RuntimeException('Client file type must be string');
-        }
-
-        if (! (is_int($size) && 0 <= $size)) {
-            throw new \RuntimeException('Server file size must be zero or greater integer');
-        }
-
-        if (! (is_string($tmpn) && 0 < strlen($tmpn))) {
-            throw new \RuntimeException('Server path must be non-empty string');
-        } else if (! file_exists($tmpn)) {
-            throw new \RuntimeException('Server path must exist');
-        }
-
-        if (! is_int($errn)) {
-            throw new \RuntimeException('Server error code must be integer');
-        } else switch ($errn) {
-            case UPLOAD_ERR_OK:
-            case UPLOAD_ERR_INI_SIZE:
-            case UPLOAD_ERR_FORM_SIZE:
-            case UPLOAD_ERR_PARTIAL:
-            case UPLOAD_ERR_NO_FILE:
-            case UPLOAD_ERR_NO_TMP_DIR:
-            case UPLOAD_ERR_CANT_WRITE:
-            case UPLOAD_ERR_EXTENSION:
-                break;
-            default:
-                throw new \RuntimeException('Server error not a defined UPLOAD_ERR_* constant');
-        }
-    }
-    */
 }

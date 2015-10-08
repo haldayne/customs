@@ -1,41 +1,67 @@
-# *Safe, simple iterator for $_FILES*
+# *Safe, simple iterator for $_FILES and robust API for checking uploads*
 
 Receiving files from users is a common need, but sadly PHP does not provide a uniform interface for accessing the files. Depending upon how the files were uploaded (a single file, multiple with different names, or multiple files with the same name) the `$_FILES` super-global takes on a different structure. To handle these cases, while defensively protecting against upload-based attacks, requires an enormous amount of code.
 
 This library provides a single, simple iterator for accessing the uploaded files.
 
-# Let's get started
+# Go!
 
 You need at least PHP 5.5.0.  No other extensions are required.
 
-Install via composer: `php composer.phar require haldayne/upload-iterator 1.0.x-dev`
+Install with composer: `php composer.phar require haldayne/customs 1.0.x-dev`
 
-# Using UploadIterator
+# Using the `$_FILES` iterator
 
-Using the iterator is dead simple: instantiate the iterator, then iterate! The iterator produces an UploadFile object for every successfully received file.  What about error cases?
-
-UploadIterator takes the stance that server errors are exceptions, while everything else is an error to show the client. This makes crystal clear problems that *you*, the developer/operator, must correct. This also makes it dead simple to discriminate between upload success and error.
-
-Here's an example:
+`Haldayne\Customs\UploadIterator` provides a dead simple means to work with uploaded files:
 
 ```php
-use Haldayne\UploadIterator;
+use Haldayne\Customs;
+
+$uploads = new UploadIterator();
+foreach ($uploads as $file) {
+    $stored_path = $file->moveTo('/path/to/folder/');
+    echo "The file was permanently stored at $stored_path.";
+}
+```
+
+## Hold on...
+
+The real world isn't that simple. Uploading files is frought with failure modes:
+
+1. Is the data in `$_FILES` valid? Bugs in [PHP itself][2] or [your application][3] might leave you vulernable.
+1. Is the server capable of storing the files? You might not have uploads enabled, or your server is out of disk to receive the file.
+1. Was a file completely and wholly received? The network connection might have been cut, or the given file is bigger than allowed.
+1. Does the received file match business rules? The file may be too small or not have a supported MIME type.
+
+If the `UploadIterator` detects a security violation or a server problem, it throws an `UploadException`. Customs takes the stance that these are abnormal situations, which you need to handle. On the other hand, if an uploaded file is incomplete because the user's browser failed to provide the whole file, you'll find an `UploadError` object in your iterator. Otherwise, the iterator wraps the upload in an `UploadFile` object. Here's a more robust example:
+
+```php
+use Haldayne\Customs;
 
 try {
-    $upload = new UploadIterator();
-} catch (UploadException $ex) {
+    $uploads = new UploadIterator();
+
+} catch (ServerProblemException $ex) {
     // uh oh, your server has a problem: no temp dir for storing files,
     // couldn't write file, extension prevents upload, etc. You need to
-    // handle this, because it's not something the client did wrong.
+    // handle this, because the user didn't do anything wrong.
     throw $ex;
-}
-foreach ($upload as $file) {
-    if ($file instanceof UploadFile) {
-        $stored_path = $file->moveTo('/path/to/folder/');
-        echo "The file was permanently stored at $stored_path.";
 
-    } else { // $file is an instance of UploadError
+} catch (SecurityConcernException $ex) {
+    // uh oh, the user provided something that looks like an attempt to
+    // break in. You might want to just rethrow this exception, or maybe
+    // you want to honeypot the user.
+    error_log("Break in attempt");
+    echo "Your file received";
+    return;
+}
+
+foreach ($uploads as $file) {
+    if ($file instanceof UploadError) {
         echo 'Sorry, your upload was not stored.';
+
+        // you can discover the original HTML name for the file input
+        echo $file->getHtmlName();
 
         // you can emit just a generic message
         echo $file->getGenericErrorMessage();
@@ -48,9 +74,44 @@ foreach ($upload as $file) {
         } else if ($file->notUploaded()) {
             echo "No file uploaded.";
         }
+
+    } else {
+        // $file is an instance of UploadFile: now you can check for domain-
+        // specific errors
+        if ($file->getServerFile()->getFileSize() < 100) {
+            echo "Minimum file size is 100 bytes.";
+        } else if (! $file->getMimeAnalyzer()->isAnImage()) {
+            echo "You must upload an image file.";
+        } else {
+            $file->moveTo('/path/to/images');
+        }
     }
 }
 ```
+
+Upload handling is complex, but Customs pushes the language complexity (dealing with the `$_FILES` super-global schizomorphia, conditionally absent MIME extensions, etc.) out of the developer's way.
+
+## Working with uploaded files
+
+So `UploadIterator` gave you an `UploadFile`. What do you want to do?
+
+1. Check the file at a fundamental level. Call `UploadFile::getServerFile()`, which is an [`SplFileInfo`][4]
+
+
+
+Now what? The first thing code typically does is check that the file matches some expected type. MIME often does the job, but not always. I used to write a lot of GIS code that required using external spatial analysis tools. Couple of problems, though. First 
+
+
+Typically you'll do two things: check the file using system tools, then move the file to some directory for later use. Customs 
+
+For many cases, checking the file size and the MIME type is enough.
+
+
+
+So the user uploaded a file: no exception was thrown, and you've got an `UploadFile`. What now? Usually, you'll do two things to the file: 
+
+
+
 
 # Features
 
@@ -122,6 +183,10 @@ God help you if you do these:
 <input type='file' name='file[a][b][c][d]' /> // six levels deep
 <input type='file' name='file 1' /> // one level, key named "file_1"
 <input type='file' name='file 1[.1]' /> // two levels, keys "file_1" => ".1"
+// these next three all resolve to the same key "file_X"
+<input type='file' name='file X' />
+<input type='file' name='file.X' />
+<input type='file' name='file_X' />
 
 ```
 
@@ -189,4 +254,5 @@ TODO: this is a security hazard, someone could fish the meta data. but they coul
 
 
 [1]: http://php.net/manual/en/reserved.variables.files.php
-[2]: https://nealpoole.com/blog/2011/10/directory-traversal-via-php-multi-file-uploads/
+[2]: http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2011-2202
+[3]: https://www.owasp.org/index.php/File_System#File_upload
