@@ -6,6 +6,18 @@ namespace Haldayne\Customs;
  */
 class UploadIterator implements \ArrayAccess, \SeekableIterator, \Countable
 {
+    /**
+     * Create a new UploadIterator.
+     *
+     * With no arguments, creates an iterator over the $_FILES super-global.
+     * You may instead pass your own array having the same format as $_FILES.
+     * If any of the files indicate a security concern or a server problem
+     * that prevented their storage, then the constructor throws an exception.
+     *
+     * @param array $input An alternate $_FILES-like array to iterate over.
+     *
+     * @throws UploadException
+     */
     public function __construct(array $input = null)
     {
         $this->input = (null === $input ? $_FILES : $input);
@@ -14,11 +26,34 @@ class UploadIterator implements \ArrayAccess, \SeekableIterator, \Countable
 
     // implements \ArrayAccess
 
+    /**
+     * Implements isset() checks on the iterator.
+     *
+     * ```
+     * $it = new Haldayne\Customs\UploadIterator;
+     * if (isset($it[0])) { ... }
+     * ```
+     *
+     * @param int $offset The 
+     * @return bool
+     */
     public function offsetExists($offset)
     {
         return array_key_exists($offset, $this->files);
     }
 
+    /**
+     * Implements bracket get access to the iterator.
+     *
+     * ```
+     * $it = new Haldayne\Customs\UploadIterator;
+     * $it[0];
+     * ```
+     *
+     * @param int $offset The 
+     * @return Haldayne\Customs\UploadFile|Haldayne\Customs\UploadError
+     * @throws OutOfBoundsException When the offset does not exist.
+     */
     public function offsetGet($offset)
     {
         if ($this->offsetExists($offset)) {
