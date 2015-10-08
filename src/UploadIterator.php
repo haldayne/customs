@@ -34,7 +34,7 @@ class UploadIterator implements \ArrayAccess, \SeekableIterator, \Countable
      * if (isset($it[0])) { ... }
      * ```
      *
-     * @param int $offset The 
+     * @param int $offset The offset to check.
      * @return bool
      */
     public function offsetExists($offset)
@@ -50,9 +50,9 @@ class UploadIterator implements \ArrayAccess, \SeekableIterator, \Countable
      * $it[0];
      * ```
      *
-     * @param int $offset The 
-     * @return Haldayne\Customs\UploadFile|Haldayne\Customs\UploadError
-     * @throws OutOfBoundsException When the offset does not exist.
+     * @param int $offset The offset to check.
+     * @return UploadFile|UploadError
+     * @throws \OutOfBoundsException When the offset does not exist.
      */
     public function offsetGet($offset)
     {
