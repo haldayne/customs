@@ -1,8 +1,8 @@
 # Easily validate incoming files
 
-Receiving files from users is a common need, but sadly PHP does not provide a uniform interface for accessing the files. Depending upon how the files were uploaded (a single file, multiple with different names, or multiple files with the same name) the `$_FILES` super-global takes on a different structure. To handle these cases, while defensively protecting against upload-based attacks, requires an enormous amount of code.
+Receiving files from users is a common need, but sadly PHP does not provide a uniform interface for accessing the files. Depending upon how the files were uploaded (a single file, multiple with different names, or multiple files with the same name) the `$_FILES` super-global takes on a different structure. What's worse, depending upon your server configuration, you may not be able to reliably determine uploaded files' types.
 
-This library provides a single, simple iterator for accessing the uploaded files.
+Handling these cases, while defensively protecting against upload-based attacks, requires an enormous amount of code.  This library provides a single, simple iterator for accessing the uploaded files and a robust API for checking uploads.
 
 # Go!
 
