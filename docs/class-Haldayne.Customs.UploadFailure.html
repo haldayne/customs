@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class Haldayne\Customs\UploadFailure</title>
+
+	<link rel="stylesheet" href="resources/style.css?e99947befd7bf673c6b43ff75e9e0f170c88a60e">
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+				<li class="active">
+					<a href="namespace-Haldayne.html">
+						Haldayne<span></span>
+					</a>
+
+						<ul>
+				<li class="active">
+					<a href="namespace-Haldayne.Customs.html">
+						Customs					</a>
+
+						</li>
+							</ul></li>
+			</ul>
+		</div>
+
+		<hr>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-Haldayne.Customs.AbstractUploadEntity.html">AbstractUploadEntity</a></li>
+				<li class="active"><a href="class-Haldayne.Customs.UploadFailure.html">UploadFailure</a></li>
+				<li><a href="class-Haldayne.Customs.UploadFile.html">UploadFile</a></li>
+				<li><a href="class-Haldayne.Customs.UploadIterator.html">UploadIterator</a></li>
+			</ul>
+
+
+
+			<h3>Exceptions</h3>
+			<ul>
+				<li><a href="class-Haldayne.Customs.UploadException.html">UploadException</a></li>
+			</ul>
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="">
+		<input type="hidden" name="ie" value="UTF-8">
+		<input type="text" name="q" class="text" placeholder="Search">
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-Haldayne.Customs.html" title="Summary of Haldayne\Customs"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class UploadFailure</h1>
+
+
+	<div class="description">
+	<p>Represents a file that did not successfully upload.</p>
+	</div>
+
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-Haldayne.html">Haldayne</a>\<a href="namespace-Haldayne.Customs.html">Customs</a><br>
+		
+
+			<b>Located at</b> <a href="source-class-Haldayne.Customs.UploadFailure.html#4-32" title="Go to source code">UploadFailure.php</a>
+		<br>
+	</div>
+
+
+
+	<table class="summary methods" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="getFile" id="_getFile">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getFile">#</a>
+		<code><a href="source-class-Haldayne.Customs.UploadFailure.html#22-27" title="Go to source code">getFile</a>( )</code>
+
+		<div class="description short">
+			<p>Return the part of the file we got, if any.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Return the part of the file we got, if any.</p>
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getFailureReason" id="_getFailureReason">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getFailureReason">#</a>
+		<code><a href="source-class-Haldayne.Customs.UploadFailure.html#29-31" title="Go to source code">getFailureReason</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary properties" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="failure_codes" id="$failure_codes">
+		<td class="attributes"><code>
+			public static 
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Haldayne.Customs.UploadFailure.html#9-20" title="Go to source code"><var>$failure_codes</var></a>
+
+			<div class="description short">
+				<p>The possible failure codes and an English description.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>The possible failure codes and an English description.</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$failure_codes" class="anchor">#</a>
+				<code>[
+    UPLOAD_ERR_INI_SIZE =&gt; <span class="php-quote">'The file size exceeds the server-allowed limit.'</span>,
+    UPLOAD_ERR_FORM_SIZE =&gt; <span class="php-quote">'The file size exceeds the form-allowed upload limit.'</span>,
+    UPLOAD_ERR_PARTIAL =&gt; <span class="php-quote">'The file was only partially uploaded.'</span>,
+    UPLOAD_ERR_NO_FILE =&gt; <span class="php-quote">'No file was uploaded.'</span>,
+    UPLOAD_ERR_CANT_WRITE =&gt; <span class="php-quote">'The server failed to write the file.'</span>,
+    UPLOAD_ERR_NO_TMP_DIR =&gt; <span class="php-quote">'A server misconfiguration .'</span>,
+    UPLOAD_ERR_EXTENSION =&gt; <span class="php-quote">'A PHP server extension cancelled the upload.'</span>,
+]</code>
+			</div>
+		</td>
+	</tr>
+	</table>
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		 API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>
