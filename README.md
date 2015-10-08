@@ -1,4 +1,4 @@
-# *Safe, simple iterator for $_FILES and robust API for checking uploads*
+# Easily validate incoming files
 
 Receiving files from users is a common need, but sadly PHP does not provide a uniform interface for accessing the files. Depending upon how the files were uploaded (a single file, multiple with different names, or multiple files with the same name) the `$_FILES` super-global takes on a different structure. To handle these cases, while defensively protecting against upload-based attacks, requires an enormous amount of code.
 
@@ -10,7 +10,7 @@ You need at least PHP 5.5.0.  No other extensions are required.
 
 Install with composer: `php composer.phar require haldayne/customs 1.0.x-dev`
 
-# Using the `$_FILES` iterator
+# Iterating on uploaded files
 
 `Haldayne\Customs\UploadIterator` provides a dead simple means to work with uploaded files:
 
