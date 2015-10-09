@@ -50,7 +50,7 @@ class UploadFile extends AbstractUploadEntity
      */
     public function getMimeAnalyzer()
     {
-        return new Mime\Analyzer(
+        return new Mime\Analyzer();
     }
 
     // PROTECTED API
