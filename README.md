@@ -63,10 +63,10 @@ foreach ($uploads as $file) {
         // you can discover the original HTML name for the file input
         echo $file->getHtmlName();
 
-        // you can emit just a generic message
-        echo $file->getGenericErrorMessage();
+        // you can emit a generic message...
+        echo $file->getErrorMessage();
 
-        // or you can get specific
+        // ... or you can get specific.
         if ($file->isTooBig($maximum)) {
             echo "The file was too big. Maximum is $maximum bytes.";
         } else if ($file->isPartial($received)) {

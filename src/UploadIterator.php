@@ -302,7 +302,7 @@ class UploadIterator implements \ArrayAccess, \SeekableIterator, \Countable
     {
         // ensure the local server file was actually uploaded
         if (! is_uploaded_file($info['tmp_name'])) {
-            throw new \RuntimeException();
+            throw new \RuntimeException(); // ContrabandUploadException
         }
 
         // return the correct object based on the type

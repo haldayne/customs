@@ -14,11 +14,12 @@ class UploadFile extends AbstractUploadEntity
      * @param string $htmlName The HTML variable name corresponding to this file.
      * @param null|string $name The original file name, as given by the client.
      * @param string $file The temporary server file path to this file.
+     * @internal
      */
     public function __construct($htmlName, $name, $file)
     {
         parent::__construct($htmlName);
-        $this->name = $clientFilename;
+        $this->name = $name;
         $this->file = new \SplFileInfo($file);
     }
 
