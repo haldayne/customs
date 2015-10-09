@@ -1,8 +1,16 @@
 <?php
+/**
+ * A safe and simple iterator for the `$_FILES` super-global. Abstracts 
+ * differences in `$_FILES` format, throws exceptions when abnormal situations
+ * arise, and provide objects to work with the uploaded file.
+ *
+ * @author Bishop Bettini <bishop@php.net>
+ */
 namespace Haldayne\Customs;
 
 /**
- * Iterate over the $_FILES super-global, or an array in that same format.
+ * Implements an iterator over the $_FILES super-global or an array of
+ * similar structure.
  */
 class UploadIterator implements \ArrayAccess, \SeekableIterator, \Countable
 {
@@ -153,6 +161,7 @@ class UploadIterator implements \ArrayAccess, \SeekableIterator, \Countable
     /**
      * Arbitrarily move the current position within the iterator.
      *
+     * @param int $position The position to access.
      * @return void
      * @throws \OutOfBoundsException
      * @api
@@ -247,8 +256,12 @@ class UploadIterator implements \ArrayAccess, \SeekableIterator, \Countable
     }
 
     /**
-     * Helper to `names`, which recursively traverses the iterator,
-     * appending new keys onto the base-so-far.
+     * Helper to `names`, which recursively traverses the iterator appending
+     * new keys onto the base-so-far.
+     *
+     * @param \RecursiveArrayIterator $it
+     * @param string $base
+     * @param array $names
      */
     private function reducer(\RecursiveArrayIterator $it, $base, &$names)
     {
@@ -266,6 +279,9 @@ class UploadIterator implements \ArrayAccess, \SeekableIterator, \Countable
     /**
      * Given an HTML name, gather all its information into a standard
      * info structure.
+     *
+     * @param string $name
+     * @return array
      */
     private function gather($name)
     {
@@ -302,7 +318,7 @@ class UploadIterator implements \ArrayAccess, \SeekableIterator, \Countable
     {
         // ensure the local server file was actually uploaded
         if (! is_uploaded_file($info['tmp_name'])) {
-            throw new SecurityConcernException($name, SecurityConcernException::NOT_AN_UPLOAD);
+            throw new SecurityConcernException($name, SecurityConcernException::NOT_UPLOADED);
         }
 
         // return the correct object based on the type
