@@ -1,6 +1,4 @@
 <?php
-namespace Haldayne\Customs;
-
 /**
  * Represents a file that did not successfully upload.
  *
@@ -12,6 +10,8 @@ namespace Haldayne\Customs;
  * @see UploadException which occurs when the server went wrong or the client
  * appears to be circumventing PHP file upload safeguards.
  */
+namespace Haldayne\Customs;
+
 class UploadError
 {
     use HtmlNameAccessorTrait;

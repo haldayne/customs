@@ -1,4 +1,7 @@
 <?php
+/**
+ * Methods to inspect and gather information about the upload configuration.
+ */
 namespace Haldayne\Customs;
 
 /**
@@ -121,6 +124,9 @@ class UploadConfig
     /**
      * Given two values which follow the "0 or fewer is unlimited" pattern,
      * return the limiting number or PHP_INT_MAX if neither would limit.
+     *
+     * @param int $a
+     * @param int $b
      */
     private static function limit($a, $b)
     {
