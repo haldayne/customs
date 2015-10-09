@@ -4,15 +4,18 @@ namespace Haldayne\Customs;
 /**
  * Represents a file that did not successfully upload.
  *
- * Errors occur when the client did something wrong. The possible causes are:
+ * Errors occur when the *client* did something wrong. The possible causes are:
  * - The client did not upload a file.
  * - The client uploaded a partial, incomplete file.
  * - The client sent more bytes than either the form or the server allowed.
  *
- * @see UploadException which occurs when the server went wrong or a the client is breaking in
+ * @see UploadException which occurs when the server went wrong or the client
+ * appears to be circumventing PHP file upload safeguards.
  */
-class UploadError extends AbstractdUploadEntity
+class UploadError
 {
+    use HtmlNameAccessorTrait;
+
     /**
      * Create a new upload error object.
      *
@@ -23,8 +26,7 @@ class UploadError extends AbstractdUploadEntity
      */
     public function __construct($htmlName, $code, $size)
     {
-        parent::__construct($htmlName);
-
+        $this->setHtmlName($htmlName);
         $this->code = intval($code);
         $this->size = intval($size);
     }
@@ -86,10 +88,10 @@ class UploadError extends AbstractdUploadEntity
     public function isTooBig(&$maximum = null)
     {
         if (UPLOAD_ERR_INI_SIZE === $this->code) {
-            $maximum = ini_get('upload_max_filesize');
+            $maximum = UploadConfig::systemMaxUploadBytes();
             return true;
         } else if (UPLOAD_ERR_FORM_SIZE === $this->code) {
-            $maximum = $_POST['MAX_FILE_SIZE'];
+            $maximum = UploadConfig::formMaxUploadBytes();
             return true;
         } else {
             return false;
@@ -123,7 +125,7 @@ class UploadError extends AbstractdUploadEntity
      */
     public function notUploaded()
     {
-        return (UPLOAD_ERR_NO_FILE === $this->code);
+        return UPLOAD_ERR_NO_FILE === $this->code;
     }
 
     // PRIVATE API

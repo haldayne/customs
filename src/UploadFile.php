@@ -6,8 +6,10 @@ use Haldayne\Mime;
 /**
  * Represents a file that has been successfully uploaded.
  */
-class UploadFile extends AbstractUploadEntity
+class UploadFile
 {
+    use HtmlNameAccessorTrait;
+
     /**
      * Create a new object representing a *successfully* uploaded file.
      *
@@ -18,7 +20,7 @@ class UploadFile extends AbstractUploadEntity
      */
     public function __construct($htmlName, $name, $file)
     {
-        parent::__construct($htmlName);
+        $this->setHtmlName($htmlName);
         $this->name = $name;
         $this->file = new \SplFileInfo($file);
     }

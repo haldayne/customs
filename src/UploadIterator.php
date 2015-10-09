@@ -302,7 +302,7 @@ class UploadIterator implements \ArrayAccess, \SeekableIterator, \Countable
     {
         // ensure the local server file was actually uploaded
         if (! is_uploaded_file($info['tmp_name'])) {
-            throw new \RuntimeException(); // ContrabandUploadException
+            throw new SecurityConcernException($name, SecurityConcernException::NOT_AN_UPLOAD);
         }
 
         // return the correct object based on the type
@@ -319,10 +319,10 @@ class UploadIterator implements \ArrayAccess, \SeekableIterator, \Countable
         case UPLOAD_ERR_NO_TMP_DIR:
         case UPLOAD_ERR_CANT_WRITE:
         case UPLOAD_ERR_EXTENSION:
-            throw new \RuntimeException();
+            throw new ServerProblemException($name, $code);
 
         default:
-            throw new \RuntimeException();
+            throw new SecurityConcernException($name, SecurityConcernException::UNKNOWN_CODE);
         }
     }
 }
