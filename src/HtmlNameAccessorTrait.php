@@ -30,10 +30,12 @@ trait HtmlNameAccessorTrait
     /**
      * Set the HTML variable name.
      *
+     * Only UploadIterator should set the name on artifact objects using
+     * this trait.
+     *
      * @param string $htmlName The HTML variable name.
      * @return self
-     * @api
-     * @since 1.0.0
+     * @internal
      */
     public function setHtmlName($htmlName)
     {
@@ -43,7 +45,10 @@ trait HtmlNameAccessorTrait
 
     /**
      * Get the HTML variable name.
+     *
      * @return string
+     * @api
+     * @since 1.0.0
      */
     public function getHtmlName()
     {
