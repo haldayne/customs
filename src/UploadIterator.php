@@ -1,16 +1,12 @@
 <?php
-/**
- * A safe and simple iterator for the `$_FILES` super-global. Abstracts 
- * differences in `$_FILES` format, throws exceptions when abnormal situations
- * arise, and provide objects to work with the uploaded file.
- *
- * @author Bishop Bettini <bishop@php.net>
- */
 namespace Haldayne\Customs;
 
 /**
  * Implements an iterator over the $_FILES super-global or an array of
  * similar structure.
+ *
+ * Abstracts differences in `$_FILES` format, throws exceptions when abnormal
+ * situations arise, and provides objects to work with the uploaded file.
  */
 class UploadIterator implements \ArrayAccess, \SeekableIterator, \Countable
 {

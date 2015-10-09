@@ -1,7 +1,4 @@
 <?php
-/**
- * Methods to inspect and gather information about the upload configuration.
- */
 namespace Haldayne\Customs;
 
 /**
