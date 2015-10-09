@@ -15,8 +15,9 @@ class UploadIterator implements \ArrayAccess, \SeekableIterator, \Countable
      * that prevented their storage, then the constructor throws an exception.
      *
      * @param array $input An alternate $_FILES-like array to iterate over.
-     *
      * @throws UploadException
+     * @api
+     * @since 1.0.0
      */
     public function __construct(array $input = null)
     {
@@ -36,6 +37,7 @@ class UploadIterator implements \ArrayAccess, \SeekableIterator, \Countable
      *
      * @param int $offset The offset to check.
      * @return bool
+     * @internal
      */
     public function offsetExists($offset)
     {
@@ -53,6 +55,7 @@ class UploadIterator implements \ArrayAccess, \SeekableIterator, \Countable
      * @param int $offset The offset to check.
      * @return UploadFile|UploadError
      * @throws \OutOfBoundsException When the offset does not exist.
+     * @internal
      */
     public function offsetGet($offset)
     {
@@ -63,11 +66,23 @@ class UploadIterator implements \ArrayAccess, \SeekableIterator, \Countable
         }
     }
 
+    /**
+     * Satisfies the \ArrayAccess interface, but you may not update the
+     * iterator.
+     * @throws \LogicException
+     * @internal
+     */
     public function offsetSet($offset, $value)
     {
         throw new \LogicException('Cannot update the iterator');
     }
 
+    /**
+     * Satisfies the \ArrayAccess interface, but you may not update the
+     * iterator.
+     * @throws \LogicException
+     * @internal
+     */
     public function offsetUnset($offset)
     {
         throw new \LogicException('Cannot update the iterator');
@@ -75,31 +90,74 @@ class UploadIterator implements \ArrayAccess, \SeekableIterator, \Countable
 
     // implements \SeekableIterator
 
+    /**
+     * Returns the current upload entity within the iterator.
+     *
+     * @return UploadFile|UploadError
+     * @api
+     * @since 1.0.0
+     */
     public function current()
     {
         return $this->files[$this->index];
     }
 
+    /**
+     * Returns the key of the current upload entity within the iterator.
+     *
+     * @return int
+     * @api
+     * @since 1.0.0
+     */
     public function key()
     {
         return $this->index;
     }
 
+    /**
+     * Advance the iterator to the next upload entity.
+     *
+     * @return void
+     * @api
+     * @since 1.0.0
+     */
     public function next()
     {
         ++$this->index;
     }
 
+    /**
+     * Rewind to the first element of the iterator.
+     *
+     * @return void
+     * @api
+     * @since 1.0.0
+     */
     public function rewind()
     {
         $this->index = 0;
     }
 
+    /**
+     * Check if the current position within the iterator is valid.
+     *
+     * @return bool
+     * @api
+     * @since 1.0.0
+     */
     public function valid()
     {
         return array_key_exists($this->index, $this->files);
     }
 
+    /**
+     * Arbitrarily move the current position within the iterator.
+     *
+     * @return void
+     * @throws \OutOfBoundsException
+     * @api
+     * @since 1.0.0
+     */
     public function seek($position)
     {
         if ($this->offsetGet($position)) {
@@ -111,6 +169,13 @@ class UploadIterator implements \ArrayAccess, \SeekableIterator, \Countable
 
     // implements \Countable
 
+    /**
+     * Return a count of upload entities within the iterator.
+     *
+     * @return int
+     * @api
+     * @since 1.0.0
+     */
     public function count()
     {
         return count($this->files);
@@ -118,14 +183,17 @@ class UploadIterator implements \ArrayAccess, \SeekableIterator, \Countable
 
     // PRIVATE API
 
+    /** @var array $input The $_FILES or similar array provided in ctor */
     private $input;
+    /** @var array $files The internal array holding processed upload entities */
     private $files;
+    /** @var int $index The pointer to the current index in the internal array */
     private $index;
 
     /**
      * Import a structure purporting to be a valid $_FILES format into a flat
      * array of UploadFile or UploadError. Resolve all recursive structure and
-     * reconstitues the HTML form name.
+     * reconstitue the HTML form name.
      */
     private function import()
     {
@@ -148,7 +216,7 @@ class UploadIterator implements \ArrayAccess, \SeekableIterator, \Countable
 
     /**
      * Using the "name" key in the input as a model, figure out all the
-     * HTML names.
+     * HTML names given in the original input.
      */
     private function names()
     {
@@ -179,7 +247,7 @@ class UploadIterator implements \ArrayAccess, \SeekableIterator, \Countable
     }
 
     /**
-     * Companion to `names`, which recursively traverses the iterator,
+     * Helper to `names`, which recursively traverses the iterator,
      * appending new keys onto the base-so-far.
      */
     private function reducer(\RecursiveArrayIterator $it, $base, &$names)
