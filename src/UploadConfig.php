@@ -31,7 +31,7 @@ class UploadConfig
      * Specified at the system level by the `upload_tmp_dir` ini directive.
      * If that directory isn't writeable, then PHP falls back to the system
      * temporary directory, which is specified at the system level by the
-     * `sys_temp_dir` ini directive.
+     * `sys_temp_dir` ini directive (and we can just ask `sys_get_temp_dir`).
      *
      * @return string|null
      * @api
@@ -44,12 +44,7 @@ class UploadConfig
             return $dir;
         }
 
-        $dir = ini_get('sys_temp_dir');
-        if (empty($dir)) {
-            return sys_get_temp_dir();
-        } else {
-            return $dir;
-        }
+        return sys_get_temp_dir();
     }
 
     /**
@@ -60,7 +55,10 @@ class UploadConfig
      * *lower* of the two values defines the *upper* limit of the maximum
      * file size.
      *
-     * @return int|null Integer bytes if limit applies, null if unlimited
+     * If the number of returned bytes equals `PHP_INT_MAX`, there is
+     * effectively no limit.
+     *
+     * @return int Bytes
      * @api
      * @since 1.0.0
      */
@@ -80,7 +78,10 @@ class UploadConfig
      * form, then all file inputs that come *after* that hidden input element
      * will be limited to the number of bytes given in the `MAX_FILE_SIZE`.
      *
-     * @return int|null Integer bytes if limit applies, null if unlimited
+     * If the number of returned bytes equals `PHP_INT_MAX`, there is
+     * effectively no limit.
+     *
+     * @return int Bytes
      * @api
      * @since 1.0.0
      */
@@ -89,14 +90,17 @@ class UploadConfig
         if (array_key_exists('MAX_FILE_SIZE', $_POST)) {
             return intval($_POST['MAX_FILE_SIZE']);
         } else {
-            return null;
+            return PHP_INT_MAX;
         }
     }
 
     /**
      * How many simultaneous file uploads do we support?
      *
-     * @return int|null Integer bytes if limit applies, null if unlimited
+     * If the number of returned uploads equals `PHP_INT_MAX`, there is
+     * effectively no limit.
+     *
+     * @return int Number of uploads
      * @api
      * @since 1.0.0
      */
@@ -116,7 +120,7 @@ class UploadConfig
 
     /**
      * Given two values which follow the "0 or fewer is unlimited" pattern,
-     * return the limiting number or null if neither would limit.
+     * return the limiting number or PHP_INT_MAX if neither would limit.
      */
     private static function limit($a, $b)
     {
@@ -126,7 +130,7 @@ class UploadConfig
 
         // if both are unlimited, there is no limit
         } else if ($a <= 0 && $b <= 0) {
-            return null;
+            return PHP_INT_MAX;
 
         // if one is limited, the maximum is the limit
         } else {
