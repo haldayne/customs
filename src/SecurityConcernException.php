@@ -1,8 +1,6 @@
 <?php
 namespace Haldayne\Customs;
 
-use Haldayne\Boost\functions\
-
 /**
  * A specific kind of UploadException: the upload is suspicious.
  *
