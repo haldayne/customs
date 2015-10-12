@@ -6,7 +6,8 @@ namespace Haldayne\Customs;
  *
  * It's recommended that you also log the temporary directory and currently
  * installed extensions for their diagnostic value. The exception message
- * does not include these details for security.
+ * does not include these details for security, but the exception provides
+ * a method for extracting them. Example:
  *
  * ```
  * try {
@@ -44,8 +45,16 @@ class ServerProblemException extends UploadException
     }
 
     /**
-     * Returns a string containing deeper diagnostics of the temporary
-     * directory and installed extensions.
+     * Returns a string containing deeper diagnostics of the system state
+     * at the time the server problem occurred.
+     *
+     * Server problems may not last long (a lot of simultaneous uploads
+     * temporarily eats all the upload space) or may be semi-permanent (an
+     * extension is preventing all uploads). It's therefore important to
+     * know as much as possible about the system at the time of the problem.
+     *
+     * This method captures the free space available, loaded extensions, and
+     * session id into a string for foresnic diagnostics.
      *
      * @return string
      * @api
@@ -53,13 +62,15 @@ class ServerProblemException extends UploadException
      */
     public function getDiagnosticMessage()
     {
-        $uploadWokringPath = Config::uploadWorkingPath();
+        $uploadWorkingPath = Config::uploadWorkingPath();
         return sprintf(
-            '%s: tempdir=[%s], free space=[%s], extensions=[%s]',
+            '%s: working_dir=[%s], free_disk=[%s], extensions=[%s], session_id=[%s], remote_addr=[%s]',
             __CLASS__,
             $uploadWorkingPath,
             disk_free_space($uploadWorkingPath),
-            implode(',', get_loaded_extensions())
+            implode(',', get_loaded_extensions()),
+            session_id(),
+            $_SERVER['REMOTE_ADDR']
         );
     }
 }
