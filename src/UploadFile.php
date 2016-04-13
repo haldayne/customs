@@ -64,7 +64,7 @@ class UploadFile
     {
         $ok = move_uploaded_file($this->getServerFile()->getRealPath(), $path); 
         if (true !== $ok) {
-            throw new UploadException('Cannot move file');
+            throw new UploadException($this->getHtmlName());
         }
     }
 
