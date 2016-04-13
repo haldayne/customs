@@ -21,14 +21,15 @@ class SecurityConcernException extends UploadException
     const NOT_UPLOADED = 1;
     const UNKNOWN_CODE = 2;
 
-    public function __construct($message, $code = 0, \Exception $pex)
+    public function __construct($htmlName, $code = 0, \Exception $pex = null)
     {
-        if (SecurityConcernException::NOT_UPLOADED === $code) {
-            $message = "$message: Was not uploaded through POST";
-        } else if (SecurityConcernException::UNKNOWN_CODE <= $code) {
-            $message = "$message: Had an unknown PHP upload error code: $code";
-        }
+        parent::__construct($htmlName, $code, $pex);
 
-        parent::__construct($message, $code, $pex);
+        if (SecurityConcernException::NOT_UPLOADED === $code) {
+            $this->message = 'The file was not uploaded through POST';
+        } else if (SecurityConcernException::UNKNOWN_CODE <= $code) {
+            $code -= SecurityConcernException::UNKNOWN_CODE;
+            $this->message = "The file had an unknown PHP upload error code: $code";
+        }
     }
 }

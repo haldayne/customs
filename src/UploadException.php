@@ -18,9 +18,9 @@ class UploadException extends \RuntimeException
      * Create a new upload exception.
      * @internal
      */
-    public function __construct($htmlName, $code, \Exception $ex = null)
+    public function __construct($htmlName, $code, \Exception $pex = null)
     {
-        parent::__construct('There was a problem with your upload', $code, $ex);
+        parent::__construct('There was a problem with your upload', $code, $pex);
         $this->setHtmlName($htmlName);
     }
 }

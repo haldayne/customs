@@ -21,22 +21,22 @@ namespace Haldayne\Customs;
  */
 class ServerProblemException extends UploadException
 {
-    public function __construct($message, $code = 0, \Exception $pex = null)
+    public function __construct($htmlName, $code = 0, \Exception $pex = null)
     {
+        parent::__construct($htmlName, $code, $pex);
+
         switch ($code) {
         case UPLOAD_ERR_NO_TMP_DIR:
-            $message = "$message: No temporary folder in which to hold the upload";
+            $this->message = "No temporary folder in which to hold the upload";
             break;
 
         case UPLOAD_ERR_CANT_WRITE:
-            $message = "$message: Failed to write upload to temporary location";
+            $this->message = "Failed to write upload to temporary location";
             break;
 
         case UPLOAD_ERR_EXTENSION:
-            $message = "$message: An extension blocked the upload";
+            $this->message = "An extension blocked the upload";
             break;
         }
-
-        parent::__construct($message, $code, $pex);
     }
 }
