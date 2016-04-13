@@ -9,17 +9,12 @@
     ],
     "require": {
         "php": "^5.5.0",
-        "haldayne/boost": "1.0.x-dev"
+        "haldayne/boost": "^1.0"
     },
     "autoload": {
         "classmap": [ "src" ],
         "psr-4": {
             "Haldayne\\Customs\\": "src/"
-        }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.0.x-dev"
         }
     },
     "config": {

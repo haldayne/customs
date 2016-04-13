@@ -24,7 +24,7 @@ class UploadIteratorTest extends \PHPUnit_Framework_TestCase
     {
         // no mangling
         $n    = static::$faker->numberBetween(1, 3);
-        $info = static::provides_single_upload_info($n);
+        $info = static::provides_single_upload_info($n, [ 'error' => UPLOAD_ERR_OK ]);
         $it   = new UploadIterator($info);
         $this->assertSame($n, $it->count(), '$info = '. var_export($info, true));
 
@@ -39,7 +39,9 @@ class UploadIteratorTest extends \PHPUnit_Framework_TestCase
         // no mangling
         $m    = static::$faker->numberBetween(1, 3);
         $n    = static::$faker->numberBetween(1, 3);
-        $info = static::provides_multiple_upload_info($m, $n);
+        $info = static::provides_multiple_upload_info(
+            $m, $n, [ 'error' => UPLOAD_ERR_OK ]
+        );
         $it   = new UploadIterator($info);
         $this->assertSame($m * $n, $it->count(), '$info = '. var_export($info, true));
 
@@ -98,7 +100,8 @@ class UploadIteratorTest extends \PHPUnit_Framework_TestCase
         for (; 0 < $m; $m--) {
             $name = static::provides_name(); // outer HTML element
             $multi[$name] = [];
-            for (; 0 < $n; $n--) {
+            $i = $n;
+            for (; 0 < $i; $i--) {
                 $info = static::provides_info($defaults);
                 $subn = static::provides_name(); // and inner
                 foreach ($info as $prop => $val) {
@@ -164,9 +167,9 @@ class UploadIteratorTest extends \PHPUnit_Framework_TestCase
      * @see http://stackoverflow.com/q/3424860/2908724
      * @see https://bugs.php.net/bug.php?id=34882
      */
-    public static function provides_name($mangle = true)
+    public static function provides_name()
     {
-        return static::$faker->unique()->regexify('[^][. ]{1,30}');
+        return static::$faker->unique()->regexify('[a-z0-9A-Z]{1,30}');
     }
 
     /**

@@ -26,6 +26,7 @@ class UploadIterator implements \ArrayAccess, \SeekableIterator, \Countable
     public function __construct(array $input = null)
     {
         $this->input = (null === $input ? $_FILES : $input);
+        $this->super = (null === $input ? true : false);
         $this->import();
     }
 
@@ -190,6 +191,8 @@ class UploadIterator implements \ArrayAccess, \SeekableIterator, \Countable
 
     /** @var array $input The $_FILES or similar array provided in ctor */
     private $input;
+    /** @var array $super Whether or not the input came from $_FILES */
+    private $super;
     /** @var array $files The internal array holding processed upload entities */
     private $files;
     /** @var int $index The pointer to the current index in the internal array */
@@ -313,8 +316,12 @@ class UploadIterator implements \ArrayAccess, \SeekableIterator, \Countable
     private function wrap($name, array $info)
     {
         // ensure the local server file was actually uploaded
-        if (! is_uploaded_file($info['tmp_name'])) {
-            throw new SecurityConcernException($name, SecurityConcernException::NOT_UPLOADED);
+        // NOTE: we only do this if pulling from $_FILES: if you constructed
+        // NOTE: with files, we can't legitimately make this check
+        if (! is_uploaded_file($info['tmp_name']) && $this->super) {
+            throw new SecurityConcernException(
+                $name, SecurityConcernException::NOT_UPLOADED
+            );
         }
 
         // return the correct object based on the type
@@ -334,7 +341,9 @@ class UploadIterator implements \ArrayAccess, \SeekableIterator, \Countable
             throw new ServerProblemException($name, $code);
 
         default:
-            throw new SecurityConcernException($name, SecurityConcernException::UNKNOWN_CODE);
+            throw new SecurityConcernException(
+                $name, SecurityConcernException::UNKNOWN_CODE + $info['error']
+            );
         }
     }
 }

@@ -1,8 +1,6 @@
 <?php
 namespace Haldayne\Customs;
 
-use Haldayne\Mime;
-
 /**
  * Represents a file that has been successfully uploaded.
  */
@@ -45,14 +43,6 @@ class UploadFile
     public function getServerFile()
     {
         return $this->file;
-    }
-
-    /**
-     * Get the MIME analyzer for the file
-     */
-    public function getMimeAnalyzer()
-    {
-        return new Mime\Analyzer();
     }
 
     // PROTECTED API
