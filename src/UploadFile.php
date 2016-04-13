@@ -28,6 +28,10 @@ class UploadFile
      *
      * Do not rely on this file name for anything but display, because you
      * cannot trust that it contains safe characters.
+     *
+     * @return string
+     * @api
+     * @since 1.0.0
      */
     public function getClientFilename()
     {
@@ -39,10 +43,29 @@ class UploadFile
      * before the request ends to keep the upload.
      *
      * @see UploadFile::moveTo
+     * @return \SplFileInfo
+     * @api
+     * @since 1.0.0
      */
     public function getServerFile()
     {
         return $this->file;
+    }
+
+    /**
+     * Move the temporary file holding the upload to a final destination.
+     *
+     * @throws \Haldayne\Customs\UploadException
+     * @return void
+     * @api
+     * @since 1.0.2
+     */
+    public function moveTo($path)
+    {
+        $ok = move_uploaded_file($this->getServerFile()->getRealPath(), $path); 
+        if (true !== $ok) {
+            throw new UploadException('Cannot move file');
+        }
     }
 
     // PROTECTED API
