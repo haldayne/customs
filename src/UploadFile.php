@@ -55,16 +55,22 @@ class UploadFile
     /**
      * Move the temporary file holding the upload to a final destination.
      *
-     * @throws \Haldayne\Customs\UploadException
+     * @throws \Haldayne\Customs\ServerProblemException
      * @return void
      * @api
      * @since 1.0.2
      */
     public function moveTo($path)
     {
-        $ok = move_uploaded_file($this->getServerFile()->getRealPath(), $path); 
+        $ok = move_uploaded_file(
+            $this->getServerFile()->getRealPath(),
+            $path instanceof \SplFileInfo ? $path->getRealPath() : $path
+        ); 
         if (true !== $ok) {
-            throw new UploadException($this->getHtmlName());
+            throw new ServerProblemException(
+                $this->getHtmlName(),
+                ServerProblemException::MOVE_UPLOAD_FAILED
+            );
         }
     }
 

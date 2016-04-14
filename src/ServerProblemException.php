@@ -21,21 +21,27 @@ namespace Haldayne\Customs;
  */
 class ServerProblemException extends UploadException
 {
+    const MOVE_UPLOAD_FAILED = 100;
+
     public function __construct($htmlName, $code = 0, \Exception $pex = null)
     {
         parent::__construct($htmlName, $code, $pex);
 
         switch ($code) {
         case UPLOAD_ERR_NO_TMP_DIR:
-            $this->message = "No temporary folder in which to hold the upload";
+            $this->message = 'No temporary folder in which to hold the upload';
             break;
 
         case UPLOAD_ERR_CANT_WRITE:
-            $this->message = "Failed to write upload to temporary location";
+            $this->message = 'Failed to write upload to temporary location';
             break;
 
         case UPLOAD_ERR_EXTENSION:
-            $this->message = "An extension blocked the upload";
+            $this->message = 'An extension blocked the upload';
+            break;
+
+        case ServerProblemException::MOVE_UPLOAD_FAILED:
+            $this->message = 'Unable to move upload';
             break;
         }
     }
