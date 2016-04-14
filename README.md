@@ -8,7 +8,7 @@ Handling these cases, while defensively protecting against upload-based attacks,
 
 You need at least PHP 5.5.0.  No other extensions are required.
 
-Install with composer: `php composer.phar require haldayne/customs 1.0.x-dev`
+Install with composer: `php composer.phar require haldayne/customs ^1.0`
 
 # Iterating on uploaded files
 
