@@ -62,7 +62,8 @@ class UploadFile
      */
     public function moveTo($path)
     {
-        $ok = move_uploaded_file(
+        // use rename, as we've already asserted the file is an upload
+        $ok = rename(
             $this->getServerFile()->getRealPath(),
             $path instanceof \SplFileInfo ? $path->getRealPath() : $path
         ); 
