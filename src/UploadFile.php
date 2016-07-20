@@ -19,21 +19,22 @@ class UploadFile
     public function __construct($htmlName, $name, $file)
     {
         $this->setHtmlName($htmlName);
-        $this->name = $name;
+        $this->name = new \SplFileInfo($name);
         $this->file = new \SplFileInfo($file);
     }
 
     /**
-     * Get the file name the client gave us for this file, if any.
+     * Get the file the client gave us for this file, if any.
      *
-     * Do not rely on this file name for anything but display, because you
-     * cannot trust that it contains safe characters.
+     * Do not rely on this file for anything but display, because you
+     * cannot trust that it contains safe characters, that the extension
+     * matches the contents, etc.
      *
-     * @return string
+     * @return \SplFileInfo|null
      * @api
-     * @since 1.0.0
+     * @since 1.0.8
      */
-    public function getClientFilename()
+    public function getClientFile()
     {
         return $this->name;
     }
